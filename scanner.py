@@ -31,3 +31,11 @@ def scan_port_range(ip, start_port, end_port):
 
         for port in range(start_port, end_port + 1):
             future = executor.submit(scanner, ip, port)
+            futures.append((future, port))
+        
+        for future, port in futures:
+            result = future.result()
+
+            if result:
+                service = get_service(port)
+                open_ports.append((port, service))

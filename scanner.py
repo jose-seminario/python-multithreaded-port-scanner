@@ -1,4 +1,5 @@
 import socket
+from concurrent.futures import ThreadPoolExecutor
 
 
 def scanner(ip, port):
@@ -21,3 +22,12 @@ def get_service(port):
         return socket.getservbyport(port)
     except:
         return "Unknown"
+
+def scan_port_range(ip, start_port, end_port):
+    open_ports = []
+    
+    with ThreadPoolExecutor() as executor:
+        futures = []
+
+        for port in range(start_port, end_port + 1):
+            future = executor.submit(scanner, ip, port)
